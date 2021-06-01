@@ -32,7 +32,7 @@ ARG version
 LABEL Description=This is a base image, which allows connecting Jenkins agents via JNLP protocols Vendor=Jenkins project Version=4.7-1
 ARG user=jenkins
 USER root
-COPY file:ed4fa8a1b7136f090d4af746a0ee86d69625e709c5e2d1d9762f9be8e3da1c92 in /usr/local/bin/jenkins-agent
+COPY ./jenkins-agent /usr/local/bin/jenkins-agent
 RUN |2 user=jenkins version=4.7-1 /bin/sh -c chmod +x /usr/local/bin/jenkins-agent \
     &&    ln -s /usr/local/bin/jenkins-agent /usr/local/bin/jenkins-slave
 USER jenkins
