@@ -1,4 +1,4 @@
-ARG BASE_IMG=arm64v8/openjdk:8-jre-alpine
+ARG BASE_IMG=arm64v8/openjdk:8-jre
 FROM $BASE_IMG
 
 ARG BUILD_DATE
@@ -23,17 +23,13 @@ COPY qemu-aarch64-static /usr/bin
 
 COPY fs ./
 
-RUN apk add --no-cache bash curl jq docker \
- && chmod a+x /tmp/*.sh \
- && mv /tmp/start-kafka.sh /tmp/broker-list.sh /tmp/create-topics.sh /tmp/versions.sh /usr/bin \
- && sync && /tmp/download-kafka.sh \
- && tar xfz /tmp/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz -C /opt \
+RUN chmod a+x /tmp/*.sh 
+RUN mv /tmp/start-kafka.sh /tmp/broker-list.sh /tmp/create-topics.sh /tmp/versions.sh /usr/bin 
+RUN sync
+RUN tar xfz /tmp/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz -C /opt \
  && rm /tmp/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz \
  && ln -s /opt/kafka_${SCALA_VERSION}-${KAFKA_VERSION} ${KAFKA_HOME} \
- && rm /tmp/* \
- && wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk \
- && apk add --no-cache --allow-untrusted glibc-${GLIBC_VERSION}.apk \
- && rm glibc-${GLIBC_VERSION}.apk
+ && rm -rf /tmp/* 
 
 VOLUME ["/kafka"]
 
